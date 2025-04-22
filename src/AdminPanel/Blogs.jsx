@@ -11,7 +11,8 @@ import {
     Switch,
     DatePicker,
     InputNumber,
-    Space
+    Space,
+    Popconfirm
 } from "antd";
 
 import {
@@ -202,7 +203,6 @@ const Blogs = () => {
             category: record.category._id,
             subcategories: record.subCategory._id,
             tags: record.tag._id,
-            postedBy: record.author._id,
             faqs: record.faqs || [],
             alt:record.alt
             // dob:record.dateOfBirth,
@@ -213,7 +213,7 @@ const Blogs = () => {
     const handleStatusToggle = async (record) => {
         try {
             const response = await axios.patch(
-                `${baseurl}/api/admin/toggled/${record?._id}`
+                `${baseurl}/api/blog/toggled/${record?._id}`
             );
             console.log(response);
 
@@ -225,6 +225,19 @@ const Blogs = () => {
             console.log(error);
         }
     };
+
+
+    const handleDelete = async(record)=>{
+        try {
+             const response = await axios.delete(`${baseurl}/api/blog/deleteBlog/${record}`)
+             if (response) {
+                message.success("Status updated succesfully");
+                fetchData();
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
 
@@ -271,7 +284,7 @@ const Blogs = () => {
             category: values.category,
             subCategory: values.subcategories,
             tag: values.tags,
-            author: values.postedBy,
+            author: auth?.user?._id,
             image: image1,
             content: editorContent,
             faqs:values.faqs,
@@ -308,7 +321,7 @@ const Blogs = () => {
             category: values.category,
             subCategory: values.subcategories,
             tag: values.tags,
-            author: values.postedBy,
+            author: auth?.user?._id,
             content: editorContent,
             faqs:values.faqs,
             alt:values.alt,
@@ -371,6 +384,76 @@ const Blogs = () => {
 
         // specialization
 
+        {
+          title: "Status",
+          key: "Status",
+          render: (_, record) => (
+            <Switch
+              checked={record.status === "Active"}
+              onChange={() => handleStatusToggle(record)}
+              checkedChildren="Active"
+              unCheckedChildren="Inactive"
+            />
+          ),
+        },
+
+        {
+            title: "Actions",
+            key: "actions",
+            render: (_, record) => (
+                <>
+                    <Button onClick={() => handleEdit(record)}>Update</Button>
+                </>
+            ),
+        },
+
+        {
+            title: "Delete",
+            render: (_, record) => (
+                <>
+                    {auth?.user?.role === 'superAdmin' && (
+                        <Popconfirm
+                            title="Are you sure you want to delete this blog?"
+                            onConfirm={() => handleDelete(record._id)}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <Button type="link" danger>
+                                Delete
+                            </Button>
+                        </Popconfirm>
+                    )}
+                </>
+            ),
+        }
+    ];
+
+
+    const columns1 = [
+        {
+            title: "Blog Title",
+            dataIndex: "title",
+            key: "title",
+        },
+
+        {
+            title: "Categories",
+            dataIndex: ['category', 'name'],
+            key: "name",
+        },
+
+        {
+            title: "Subcategories",
+            dataIndex: ['subCategory', 'name'],
+            key: "subcategories",
+        },
+
+
+
+
+
+        // specialization
+
         // {
         //   title: "Status",
         //   key: "Status",
@@ -398,30 +481,40 @@ const Blogs = () => {
 
 
 
-
-
-
-
-
     return (
         <div>
             <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
                 Add Blog
             </Button>
-            <Table
-                columns={columns}
-                dataSource={data}
-                loading={loading}
-                rowKey={(record) => record._id}
-                onRow={(record) => ({
-                    onClick: () => {
-                        handleRowClick(record); // Trigger the click handler
-                    },
-                })}
+            {
+                auth?.user?.role === 'superAdmin' ? (<><Table
+                    columns={columns}
+                    dataSource={data}
+                    loading={loading}
+                    rowKey={(record) => record._id}
+                    onRow={(record) => ({
+                        onClick: () => {
+                            handleRowClick(record); // Trigger the click handler
+                        },
+                    })}
 
+                />
+                </>) : (<>
+                    <Table
+                        columns={columns1}
+                        dataSource={data}
+                        loading={loading}
+                        rowKey={(record) => record._id}
+                        onRow={(record) => ({
+                            onClick: () => {
+                                handleRowClick(record); // Trigger the click handler
+                            },
+                        })}
 
-            // rowKey="_id"
-            />
+                    />
+
+                </>)
+            }
 
             <Modal
                 title={editingCompBlog ? "Edit CompBlog" : "Add CompBlog"}
@@ -507,7 +600,7 @@ const Blogs = () => {
                     </Form.Item>
 
 
-                    <Form.Item
+                    {/* <Form.Item
                         name="postedBy"
                         label="Author"
                         rules={[{ required: true, message: 'Please select a category!' }]}
@@ -519,7 +612,7 @@ const Blogs = () => {
                                 </Option>
                             ))}
                         </Select>
-                    </Form.Item>
+                    </Form.Item> */}
 
 
 

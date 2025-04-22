@@ -30,11 +30,15 @@ const Login = () => {
                 localStorage.setItem('auth', JSON.stringify(response.data));
                 setAuth({
                     ...auth,
-                    user: response.data.admin,
+                    user: response.data.user,
                     token: response.data.token,
                   });
                 message.info('Login successful!');
-                navigate('/admin'); 
+
+                if(response.data.user.role ==='admin' || response.data.user.role ==='superAdmin'){
+                    navigate('/admin'); 
+                }
+               
             } else {
                 message.error('Invalid email or password');
             }

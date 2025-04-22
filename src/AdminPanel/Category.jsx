@@ -9,7 +9,8 @@ import {
     message,
     Upload,
     Switch,
-    DatePicker
+    DatePicker,
+    Popconfirm
 } from "antd";
 import { baseurl } from "../helper/Helper";
 import axios from "axios";
@@ -68,7 +69,7 @@ const Category = () => {
     const handleStatusToggle = async (record) => {
         try {
             const response = await axios.patch(
-                `${baseurl}/api/admin/toggled/${record?._id}`
+                `${baseurl}/api/catagory/toggled/${record?._id}`
             );
             console.log(response);
 
@@ -80,6 +81,20 @@ const Category = () => {
             console.log(error);
         }
     };
+
+
+    
+    const handleDelete = async(record)=>{
+        try {
+             const response = await axios.delete(`${baseurl}/api/catagory/delete-categories/${record}`)
+             if (response) {
+                message.success("Status updated succesfully");
+                fetchData();
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const handlePost = async (values) => {
         const postData = {
@@ -159,6 +174,72 @@ const Category = () => {
 
         // specialization
 
+        {
+          title: "Status",
+          key: "Status",
+          render: (_, record) => (
+            <Switch
+              checked={record.status === "Active"}
+              onChange={() => handleStatusToggle(record)}
+              checkedChildren="Active"
+              unCheckedChildren="Inactive"
+            />
+          ),
+        },
+
+        {
+            title: "Actions",
+            key: "actions",
+            render: (_, record) => (
+                <>
+                    <Button onClick={() => handleEdit(record)}>Update</Button>
+                </>
+            ),
+        },
+
+        {
+            title: "Delete",
+            render: (_, record) => (
+              <>
+                {auth?.user?.role === 'superAdmin' && (
+                  <Popconfirm
+                    title="Are you sure you want to delete this blog?"
+                    onConfirm={() => handleDelete(record._id)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button type="link" danger>
+                      Delete
+                    </Button>
+                  </Popconfirm>
+                )}
+              </>
+            ),
+          }
+    ];
+
+
+    const columns1 = [
+        {
+            title: "Name",
+            dataIndex: "name",
+            key: "name",
+        },
+        {
+            title: "Title",
+            dataIndex: "title",
+            key: "title",
+        },
+
+        {
+            title: "Description",
+            dataIndex: "para",
+            key: "para",
+        },
+
+
+        // specialization
+
         // {
         //   title: "Status",
         //   key: "Status",
@@ -188,13 +269,25 @@ const Category = () => {
             <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
                 Add Category
             </Button>
-            <Table
-                columns={columns}
-                dataSource={data}
-                loading={loading}
-            // rowKey="_id"
-            />
-
+            {
+                           auth?.user?.role==='superAdmin'?(<><Table
+                               columns={columns}
+                               dataSource={data}
+                               loading={loading}
+               
+               
+                           // rowKey="_id"
+                           /></>):(<>
+                           <Table
+                               columns={columns1}
+                               dataSource={data}
+                               loading={loading}
+               
+               
+                           // rowKey="_id"
+                           />
+                           </>)
+                       }
             <Modal
                 title={editingCategory ? "Edit Category" : "Add Category"}
                 open={isModalOpen}
