@@ -28,6 +28,7 @@ const SubCategory = () => {
     const [form] = Form.useForm();
     const [auth, setAuth] = useAuth();
     const [categories, setCategoris] = useState([])
+    const auth1 = JSON.parse(localStorage.getItem('auth'));
 
     // console.log(auth?.user._id);
 
@@ -247,7 +248,7 @@ const SubCategory = () => {
             title: "Delete",
             render: (_, record) => (
               <>
-                {auth?.user?.role === 'superAdmin' && (
+                {auth1?.user?.role === 'superAdmin' && (
                   <Popconfirm
                     title="Are you sure you want to delete this blog?"
                     onConfirm={() => handleDelete(record._id)}
@@ -344,7 +345,7 @@ const SubCategory = () => {
                 Add SubCategory
             </Button>
             {
-                           auth?.user?.role==='superAdmin'?(<><Table
+                           auth1?.user?.role==='superAdmin'?(<><Table
                                columns={columns}
                                dataSource={data}
                                loading={loading}

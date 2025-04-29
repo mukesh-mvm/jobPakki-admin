@@ -26,6 +26,7 @@ import Testinomial from "./Testinomial";
 import Category from "./Category";
 import SubCategory from "./SubCategory";
 import Blogs from "./Blogs";
+import Job from "./Job";
 // import logo from "../../public/logo.png";
 // properties-details
 
@@ -37,6 +38,9 @@ const AdminPanel = () => {
   const handleMenuClick = (e) => {
     setSelectedTab(e.key);
   };
+
+  const auth1 = JSON.parse(localStorage.getItem('auth'));
+  
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -56,6 +60,8 @@ const AdminPanel = () => {
 
         case "blogs":
         return <Blogs />;
+        case "job":
+        return <Job />;
 
       case "blog":
         return <BlogList setSelectedTab={setSelectedTab} />;
@@ -75,6 +81,7 @@ const AdminPanel = () => {
     { key: "categories", icon: <HomeOutlined />, label: "Categories" },
     { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
+    { key: "job", icon: <TeamOutlined  />, label: "Job" },
     // { key: "blog", icon: <CarOutlined />, label: "Blog" },
     // { key: "testinomial", icon: <CalendarOutlined />, label: "Testinomial" },
   ];
@@ -84,6 +91,7 @@ const AdminPanel = () => {
     { key: "categories", icon: <HomeOutlined />, label: "Categories" },
     { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
+    { key: "job", icon: <TeamOutlined  />, label: "Job" },
     // { key: "blog", icon: <CarOutlined />, label: "Blog" },
     // { key: "testinomial", icon: <CalendarOutlined />, label: "Testinomial" },
   ];
@@ -118,7 +126,7 @@ const AdminPanel = () => {
             </Menu.Item> */}
 
 {
-              auth?.user?.role==='superAdmin'?(<>
+              auth1?.user?.role==='superAdmin'?(<>
                   {menuItems?.map((menuItem) => (
               <Menu.Item key={menuItem?.key} icon={menuItem?.icon}>
                 {menuItem?.label}

@@ -27,6 +27,7 @@ const Category = () => {
     const [editingCategory, setEditingCategory] = useState(null);
     const [form] = Form.useForm();
     const [auth, setAuth] = useAuth();
+    const auth1 = JSON.parse(localStorage.getItem('auth'));
 
     // console.log(auth?.user._id);
 
@@ -201,7 +202,7 @@ const Category = () => {
             title: "Delete",
             render: (_, record) => (
               <>
-                {auth?.user?.role === 'superAdmin' && (
+                {auth1?.user?.role === 'superAdmin' && (
                   <Popconfirm
                     title="Are you sure you want to delete this blog?"
                     onConfirm={() => handleDelete(record._id)}
@@ -270,7 +271,7 @@ const Category = () => {
                 Add Category
             </Button>
             {
-                           auth?.user?.role==='superAdmin'?(<><Table
+                           auth1?.user?.role==='superAdmin'?(<><Table
                                columns={columns}
                                dataSource={data}
                                loading={loading}
