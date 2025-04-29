@@ -76,10 +76,10 @@ const SubCategory = () => {
         setEditingSubCategory(record);
         console.log(record.email);
         form.setFieldsValue({
-            name: record.name,
-            title: record.title,
-            para: record.para,
-            parent:record.parent
+            name: record?.name,
+            title: record?.title,
+            para: record?.para,
+            parent:record?.parent?._id
 
             // dob:record.dateOfBirth,
         });
@@ -120,6 +120,7 @@ const SubCategory = () => {
             name: values.name,
             title: values.title,
             para: values.para,
+            parent:values.parent
 
         };
 
@@ -145,6 +146,7 @@ const SubCategory = () => {
             name: values.name,
             title: values.title,
             para: values.para,
+            parent:values.parent,
         };
 
         try {
