@@ -79,7 +79,7 @@ const SubCategory = () => {
             name: record.name,
             title: record.title,
             para: record.para,
-            parent:record.parent._id
+            parent:record.parent
 
             // dob:record.dateOfBirth,
         });
