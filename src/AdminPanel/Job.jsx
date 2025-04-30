@@ -712,6 +712,7 @@ adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM
           <Form.Item
             name="postDate"
             label="Post Date"
+            rules={[{ required: true, message: "Please Enter posted date" }]}
           >
             <DatePicker
               format="DD/MM/YYYY"
