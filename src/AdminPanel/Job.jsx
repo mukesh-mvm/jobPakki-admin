@@ -703,7 +703,7 @@ adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM
           >
             <Select placeholder="Select Job Type">
               <Option value="private">Private</Option>
-              <Option value="govern">Govt</Option>
+              <Option value="goven">Govt</Option>
 
             </Select>
           </Form.Item>
