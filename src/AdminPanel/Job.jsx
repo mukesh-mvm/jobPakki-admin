@@ -231,7 +231,8 @@ const Job = () => {
       mdescription: record?.mdescription,
       category: record?.category?._id,
       subCategory: record?.subCategory?._id,
-      alt: record?.alt
+      alt: record?.alt,
+      companyName: record?.companyName
       // dob:record.dateOfBirth,
     });
     setIsModalOpen(true);
@@ -240,7 +241,7 @@ const Job = () => {
   const handleStatusToggle = async (record) => {
     try {
       const response = await axios.patch(
-        `${baseurl}/api/blog/toggled/${record?._id}`
+        `${baseurl}/api/job/toggled/${record?._id}`
       );
       console.log(response);
 
@@ -256,7 +257,7 @@ const Job = () => {
 
   const handleDelete = async (record) => {
     try {
-      const response = await axios.delete(`${baseurl}/api/blog/deleteBlog/${record}`)
+      const response = await axios.delete(`${baseurl}/api/job/deleteJob/${record}`)
       if (response) {
         message.success("Status updated succesfully");
         fetchData();
@@ -336,6 +337,7 @@ const Job = () => {
       category: values?.category,
       subCategory: values?.subCategory,
       alt: values?.alt,
+      companyName: values?.companyName,
       image: image1,
     };
 
@@ -401,6 +403,7 @@ adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM
       category: values?.category,
       subCategory: values?.subCategory,
       alt: values?.alt,
+      companyName: values?.companyName,
       image: imageTrue ? image1 : values.logo,
 
     };
@@ -606,6 +609,15 @@ adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM
             name="postName"
             label="Post Name "
             rules={[{ required: true, message: 'Please Enter Post Name!' }]}
+
+          >
+            <Input placeholder="Enter Post Name" />
+          </Form.Item>
+
+          <Form.Item
+            name="companyName"
+            label="Company Name "
+            rules={[{ required: true, message: 'Please Enter Company Name!' }]}
 
           >
             <Input placeholder="Enter Post Name" />
@@ -898,7 +910,7 @@ adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM
           <Form.Item
             name="salary"
             label="Salary"
-            
+            rules={[{ required: true, message: 'Please Enter salary!' }]}
           >
             <Input placeholder="Enter Salary" />
           </Form.Item>
