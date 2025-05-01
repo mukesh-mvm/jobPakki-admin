@@ -176,8 +176,10 @@ const Job = () => {
     try {
       const res = await axios.get(baseurl + "/api/job/getAllJob");
 
-      console.log("----data-----", res.data);
-      setData(res.data);
+      // console.log("----data-----", res.data);
+      const data1 = res?.data?.reverse();
+
+      setData(data1);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -707,15 +709,28 @@ adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM
 
 
 
-
           <Form.Item
             name="Jobtype"
-            rules={[{ required: true, message: "Please select jon type!" }]}
+            rules={[{ required: true, message: "Please select Job type!" }]}
             label="Job Type"
           >
             <Select placeholder="Select Job Type">
               <Option value="private">Private</Option>
               <Option value="goven">Govt</Option>
+
+            </Select>
+          </Form.Item>
+
+
+          <Form.Item
+            name="Jobrole"
+            rules={[{ required: true, message: "Please select Job Role!" }]}
+            label="Job Role"
+          >
+            <Select placeholder="Select Job Type">
+              <Option value="Full Time">Full Time</Option>
+              <Option value="Part Time">Part Time</Option>
+              <Option value="Remote">Remote</Option>
 
             </Select>
           </Form.Item>

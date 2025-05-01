@@ -204,7 +204,8 @@ const Blogs = () => {
             subcategories: record.subCategory._id,
             tags: record.tag._id,
             faqs: record.faqs || [],
-            alt:record.alt
+            alt:record.alt,
+            slug:record.slug
             // dob:record.dateOfBirth,
         });
         setIsModalOpen(true);
@@ -241,35 +242,67 @@ const Blogs = () => {
 
 
 
-    const uploadImage = async (file) => {
+    // const uploadImage = async (file) => {
+    //     console.log(file);
+    //     const formData = new FormData();
+    //     formData.append("image", file.file);
+    //     // console.log(file.file.name);
+
+    //     try {
+    //         const response = await axios.post(
+    //             `${baseurl}/upload`,
+    //             formData,
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                 },
+    //             }
+    //         );
+
+    //         if (response) {
+    //             message.success("Image uploaded successfully!");
+    //             setImage(response.data.imageUrl);
+    //         }
+
+    //         return response.data.imageUrl; // Assuming the API returns the image URL in the 'url' field
+    //     } catch (error) {
+    //         message.error("Error uploading image. Please try again later.");
+    //         console.error("Image upload error:", error);
+    //         return null;
+    //     }
+    // };
+
+
+
+     const uploadImage = async (file) => {
         console.log(file);
         const formData = new FormData();
         formData.append("image", file.file);
         // console.log(file.file.name);
-
+    
         try {
-            const response = await axios.post(
-                `${baseurl}/upload`,
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-
-            if (response) {
-                message.success("Image uploaded successfully!");
-                setImage(response.data.imageUrl);
+          const response = await axios.post(
+            `${baseurl}/api/subcatagory/uploadImage`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
             }
-
-            return response.data.imageUrl; // Assuming the API returns the image URL in the 'url' field
+          );
+    
+          if (response) {
+            message.success("Image uploaded successfully!");
+            setImage(response.data.imageUrl);
+          }
+    
+          return response.data.imageUrl; // Assuming the API returns the image URL in the 'url' field
         } catch (error) {
-            message.error("Error uploading image. Please try again later.");
-            console.error("Image upload error:", error);
-            return null;
+          message.error("Error uploading image. Please try again later.");
+          console.error("Image upload error:", error);
+          return null;
         }
-    };
+      };
 
     const handlePost = async (values) => {
          
@@ -288,7 +321,9 @@ const Blogs = () => {
             image: image1,
             content: editorContent,
             faqs:values.faqs,
-            alt:values.alt
+            alt:values.alt,
+            slug:values.slug
+
 
         };
 
@@ -306,6 +341,7 @@ const Blogs = () => {
                 message.success("User created successfully!");
                 setPhoto("");
                 fetchData();
+                setEditorContent("")
             }
         } catch (error) {
             console.log(error);
@@ -325,6 +361,7 @@ const Blogs = () => {
             content: editorContent,
             faqs:values.faqs,
             alt:values.alt,
+            slug:values.slug,
             image: imageTrue ? image1 : values.logo,
            
 
@@ -346,6 +383,7 @@ const Blogs = () => {
                 message.success("User update successfully!");
                 form.resetFields();
                 setPhoto("");
+                setEditorContent("")
             }
         } catch (error) {
             console.log(error);
@@ -531,6 +569,14 @@ const Blogs = () => {
                         rules={[{ required: true, message: "Please input the name!" }]}
                     >
                         <Input placeholder="Enter Blog Title" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="slug"
+                        label="Slug"
+                        rules={[{ required: true, message: "Please input slug!" }]}
+                    >
+                        <Input placeholder="Enter Blog slug" />
                     </Form.Item>
 
 
@@ -742,7 +788,7 @@ const Blogs = () => {
                                         onClick={handleCross}
                                     />
                                     <img
-                                        src={`${record1.image}`}
+                                        src={`${baseurl}${record1.image}`}
                                         alt=""
                                         style={{ width: "100px", height: "100px" }}
                                     />
