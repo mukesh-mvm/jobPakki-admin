@@ -234,7 +234,8 @@ const Job = () => {
       category: record?.category?._id,
       subCategory: record?.subCategory?._id,
       alt: record?.alt,
-      companyName: record?.companyName
+      companyName: record?.companyName,
+      Jobrole:record?.Jobrole
       // dob:record.dateOfBirth,
     });
     setIsModalOpen(true);
@@ -341,6 +342,7 @@ const Job = () => {
       alt: values?.alt,
       companyName: values?.companyName,
       image: image1,
+      Jobrole:values?.Jobrole
     };
 
     console.log(postData)
@@ -380,9 +382,9 @@ const Job = () => {
       title1: values?.title1,
       title2: values?.title2,
       postDate: values?.postDate ? dayjs(values.postDate).format('DD/MM/YYYY') : null,
-lastDate: values?.lastDate ? dayjs(values.lastDate).format('DD/MM/YYYY') : null,
-correctionDate: values?.correctionDate ? dayjs(values.correctionDate).format('DD/MM/YYYY') : null,
-adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM/YYYY') : null,
+      lastDate: values?.lastDate ? dayjs(values.lastDate).format('DD/MM/YYYY') : null,
+      correctionDate: values?.correctionDate ? dayjs(values.correctionDate).format('DD/MM/YYYY') : null,
+      adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM/YYYY') : null,
       shortInformation: values?.shortInformation,
       slug: values?.slug,
       applicationfeesG_O_EWs: values?.applicationfeesG_O_EWs,
@@ -407,7 +409,7 @@ adminCardDate: values?.adminCardDate ? dayjs(values.adminCardDate).format('DD/MM
       alt: values?.alt,
       companyName: values?.companyName,
       image: imageTrue ? image1 : values.logo,
-
+      Jobrole:values?.Jobrole
     };
 
    

@@ -103,3 +103,8 @@
 .ant-input-number-outlined {
   width: 100% !important;
 }
+
+
+.ant-modal-root .ant-modal{
+  width: 800px !important;
+}

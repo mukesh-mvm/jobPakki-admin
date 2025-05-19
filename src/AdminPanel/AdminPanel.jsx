@@ -27,6 +27,9 @@ import Category from "./Category";
 import SubCategory from "./SubCategory";
 import Blogs from "./Blogs";
 import Job from "./Job";
+import BestJob from "./BestJob";
+import FeatureJob from "./FeatureJob";
+import RecentJob from "./RecentJob";
 // import logo from "../../public/logo.png";
 // properties-details
 
@@ -60,8 +63,19 @@ const AdminPanel = () => {
 
         case "blogs":
         return <Blogs />;
+
+
         case "job":
         return <Job />;
+
+        case "bestjob":
+        return <BestJob />;
+
+        case "feature-job":
+        return <FeatureJob />;
+
+        case "recent-job":
+        return <RecentJob />;
 
       case "blog":
         return <BlogList setSelectedTab={setSelectedTab} />;
@@ -82,6 +96,9 @@ const AdminPanel = () => {
     { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
     { key: "job", icon: <TeamOutlined  />, label: "Job" },
+    { key: "bestjob", icon: <TeamOutlined  />, label: "Best Job" },
+    { key: "feature-job", icon: <TeamOutlined  />, label: "Feature Job" },
+    { key: "recent-job", icon: <TeamOutlined  />, label: "Recent Job" },
     // { key: "blog", icon: <CarOutlined />, label: "Blog" },
     // { key: "testinomial", icon: <CalendarOutlined />, label: "Testinomial" },
   ];
@@ -92,6 +109,11 @@ const AdminPanel = () => {
     { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
     { key: "job", icon: <TeamOutlined  />, label: "Job" },
+    { key: "bestjob", icon: <TeamOutlined  />, label: "Best Job" },
+    { key: "feature-job", icon: <TeamOutlined  />, label: "Feature Job" },
+    { key: "recent-job", icon: <TeamOutlined  />, label: "Recent Job" },
+
+
     // { key: "blog", icon: <CarOutlined />, label: "Blog" },
     // { key: "testinomial", icon: <CalendarOutlined />, label: "Testinomial" },
   ];
