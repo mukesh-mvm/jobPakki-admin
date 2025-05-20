@@ -58,8 +58,8 @@ const Blogs = () => {
     const [selectedCategory, setSelectedCategory] = useState(null); // store in a variable
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);
 
-      const[search,setSearch] = useState("")
-      const[seachloading,setSearchLoading] = useState(false);
+    const [search, setSearch] = useState("")
+    const [seachloading, setSearchLoading] = useState(false);
 
 
 
@@ -95,7 +95,7 @@ const Blogs = () => {
     // console.log(auth?.user._id);
 
     useEffect(() => {
-       
+
         fetchData1()
         fetchData3()
         fetchData4()
@@ -104,9 +104,9 @@ const Blogs = () => {
     }, []);
 
 
-    useEffect(()=>{
-          fetchData();
-      },[seachloading])
+    useEffect(() => {
+        fetchData();
+    }, [seachloading])
 
 
     useEffect(() => {
@@ -190,12 +190,12 @@ const Blogs = () => {
             // setData(res.data);
 
 
-        if(seachloading){
-        const filtered = data1.filter(job =>job.title.toLowerCase().includes(search.toLowerCase()));
-         setData(filtered);
-        }else{
-         setData(data1);
-        }
+            if (seachloading) {
+                const filtered = data1.filter(job => job.title.toLowerCase().includes(search.toLowerCase()));
+                setData(filtered);
+            } else {
+                setData(data1);
+            }
             setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -204,24 +204,24 @@ const Blogs = () => {
     };
 
 
-     const handleSeach = ()=>{
+    const handleSeach = () => {
         setSearchLoading(true)
-       
-  }
 
-  const ClearSeach = ()=>{
-     setSearchLoading(false)
-     setSearch("")
+    }
 
-  }
+    const ClearSeach = () => {
+        setSearchLoading(false)
+        setSearch("")
 
-  // console.log("---loading---",seachloading)
+    }
 
-  const handleChange= (value)=>{
-          setSearch(value)
+    // console.log("---loading---",seachloading)
 
-          // console.log("----seach----",value)
-  }
+    const handleChange = (value) => {
+        setSearch(value)
+
+        // console.log("----seach----",value)
+    }
 
 
     const handleAdd = () => {
@@ -245,8 +245,8 @@ const Blogs = () => {
             subcategories: record.subCategory._id,
             tags: record.tag._id,
             faqs: record.faqs || [],
-            alt:record.alt,
-            slug:record.slug
+            alt: record.alt,
+            slug: record.slug
             // dob:record.dateOfBirth,
         });
         setIsModalOpen(true);
@@ -269,15 +269,15 @@ const Blogs = () => {
     };
 
 
-    const handleDelete = async(record)=>{
+    const handleDelete = async (record) => {
         try {
-             const response = await axios.delete(`${baseurl}/api/blog/deleteBlog/${record}`)
-             if (response) {
+            const response = await axios.delete(`${baseurl}/api/blog/deleteBlog/${record}`)
+            if (response) {
                 message.success("Status updated succesfully");
                 fetchData();
 
 
-                  if (response) {
+                if (response) {
                     const postData = {
                         blogsToDelete: [record]
                     }
@@ -331,41 +331,41 @@ const Blogs = () => {
 
 
 
-     const uploadImage = async (file) => {
+    const uploadImage = async (file) => {
         console.log(file);
         const formData = new FormData();
         formData.append("image", file.file);
         // console.log(file.file.name);
-    
+
         try {
-          const response = await axios.post(
-            `${baseurl}/api/subcatagory/uploadImage`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
+            const response = await axios.post(
+                `${baseurl}/api/subcatagory/uploadImage`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            if (response) {
+                message.success("Image uploaded successfully!");
+                setImage(response.data.imageUrl);
             }
-          );
-    
-          if (response) {
-            message.success("Image uploaded successfully!");
-            setImage(response.data.imageUrl);
-          }
-    
-          return response.data.imageUrl; // Assuming the API returns the image URL in the 'url' field
+
+            return response.data.imageUrl; // Assuming the API returns the image URL in the 'url' field
         } catch (error) {
-          message.error("Error uploading image. Please try again later.");
-          console.error("Image upload error:", error);
-          return null;
+            message.error("Error uploading image. Please try again later.");
+            console.error("Image upload error:", error);
+            return null;
         }
-      };
+    };
 
     const handlePost = async (values) => {
-         
 
 
-       
+
+
 
         const postData = {
             title: values.title,
@@ -377,9 +377,9 @@ const Blogs = () => {
             author: auth1?.user?._id,
             image: image1,
             content: editorContent,
-            faqs:values.faqs,
-            alt:values.alt,
-            slug:values.slug
+            faqs: values.faqs,
+            alt: values.alt,
+            slug: values.slug
 
 
         };
@@ -430,11 +430,11 @@ const Blogs = () => {
             tag: values.tags,
             author: auth1?.user?._id,
             content: editorContent,
-            faqs:values.faqs,
-            alt:values.alt,
-            slug:values.slug,
+            faqs: values.faqs,
+            alt: values.alt,
+            slug: values.slug,
             image: imageTrue ? image1 : values.logo,
-           
+
 
         };
 
@@ -501,16 +501,16 @@ const Blogs = () => {
         // specialization
 
         {
-          title: "Status",
-          key: "Status",
-          render: (_, record) => (
-            <Switch
-              checked={record.status === "Active"}
-              onChange={() => handleStatusToggle(record)}
-              checkedChildren="Active"
-              unCheckedChildren="Inactive"
-            />
-          ),
+            title: "Status",
+            key: "Status",
+            render: (_, record) => (
+                <Switch
+                    checked={record.status === "Active"}
+                    onChange={() => handleStatusToggle(record)}
+                    checkedChildren="Active"
+                    unCheckedChildren="Inactive"
+                />
+            ),
         },
 
         {
@@ -546,7 +546,9 @@ const Blogs = () => {
 
 
     const columns1 = [
-        {
+
+
+         {
             title: "Blog Title",
             dataIndex: "title",
             key: "title",
@@ -603,13 +605,13 @@ const Blogs = () => {
                 Add Blog
             </Button>
 
-                    <div className="search">
-                           <Input type="text" value={search} onChange={(e)=>{handleChange(e.target.value)}} placeholder="Enter Keyword of  BLog Title"/>
-                           <Button onClick={handleSeach}> Search</Button>
-                            <Button onClick={ClearSeach}> Clear Filter</Button>
-                       </div>
-            
-            
+            <div className="search">
+                <Input type="text" value={search} onChange={(e) => { handleChange(e.target.value) }} placeholder="Enter Keyword of  BLog Title" />
+                <Button onClick={handleSeach}> Search</Button>
+                <Button onClick={ClearSeach}> Clear Filter</Button>
+            </div>
+
+
 
             {
                 auth1?.user?.role === 'superAdmin' ? (<><Table

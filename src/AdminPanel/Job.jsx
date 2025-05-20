@@ -552,10 +552,11 @@ const Job = () => {
 
 
   const columns1 = [
+
     {
-      title: "Blog Title",
-      dataIndex: "title",
-      key: "title",
+      title: "Job Title",
+      dataIndex: "postName",
+      key: "postName",
     },
 
     {
@@ -576,18 +577,18 @@ const Job = () => {
 
     // specialization
 
-    // {
-    //   title: "Status",
-    //   key: "Status",
-    //   render: (_, record) => (
-    //     <Switch
-    //       checked={record.Status === "Active"}
-    //       onChange={() => handleStatusToggle(record)}
-    //       checkedChildren="Active"
-    //       unCheckedChildren="Inactive"
-    //     />
-    //   ),
-    // },
+  {
+      title: "Status",
+      key: "Status",
+      render: (_, record) => (
+        <Switch
+          checked={record.status === "Active"}
+          onChange={() => handleStatusToggle(record)}
+          checkedChildren="Active"
+          unCheckedChildren="Inactive"
+        />
+      ),
+    },
 
     {
       title: "Actions",
