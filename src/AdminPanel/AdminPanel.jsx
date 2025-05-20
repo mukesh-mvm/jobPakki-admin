@@ -30,11 +30,13 @@ import Job from "./Job";
 import BestJob from "./BestJob";
 import FeatureJob from "./FeatureJob";
 import RecentJob from "./RecentJob";
+
+import { Profile } from "./Profile";
 // import logo from "../../public/logo.png";
 // properties-details
 
 const AdminPanel = () => {
-  const [selectedTab, setSelectedTab] = useState("users");
+  const [selectedTab, setSelectedTab] = useState("profile");
   const [id, setId] = useState();
   const navigate = useNavigate();
   const [auth, setAuth] = useAuth();
@@ -77,6 +79,11 @@ const AdminPanel = () => {
         case "recent-job":
         return <RecentJob />;
 
+
+        
+        case "profile":
+        return <Profile  setSelectedTab={setSelectedTab}/>;
+
       case "blog":
         return <BlogList setSelectedTab={setSelectedTab} />;
 
@@ -91,6 +98,7 @@ const AdminPanel = () => {
 
   const menuItems = [
     // { key: "home", icon: <TeamOutlined />, label: "Home" },
+     { key: "profile", icon: <HomeOutlined />, label: "Profile" },
     { key: "users", icon: < UserOutlined/>, label: "Admin" },
     { key: "categories", icon: <HomeOutlined />, label: "Categories" },
     { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
@@ -104,7 +112,7 @@ const AdminPanel = () => {
   ];
   const menuItems1 = [
     // { key: "home", icon: <TeamOutlined />, label: "Home" },
-    
+     { key: "profile", icon: <HomeOutlined />, label: "Profile" },
     { key: "categories", icon: <HomeOutlined />, label: "Categories" },
     { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
