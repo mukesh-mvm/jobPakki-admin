@@ -60,6 +60,9 @@ const Job = () => {
   const [selectedCategory, setSelectedCategory] = useState(null); // store in a variable
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
 
+  const[search,setSearch] = useState("")
+  const[seachloading,setSearchLoading] = useState(false);
+
   const handleCategoryChange = (value) => {
     setSelectedCategory(value); // save selected category ID to variable
     console.log("Selected Category ID:", value);
@@ -92,13 +95,18 @@ const Job = () => {
   // console.log(auth?.user._id);
 
   useEffect(() => {
-    fetchData();
+    
     fetchData1()
     fetchData3()
     fetchData4()
 
 
   }, []);
+
+
+  useEffect(()=>{
+      fetchData();
+  },[seachloading])
 
 
   useEffect(() => {
@@ -176,16 +184,46 @@ const Job = () => {
     try {
       const res = await axios.get(baseurl + "/api/job/getAllJob");
 
-      // console.log("----data-----", res.data);
+      console.log("----data-----", res.data);
       const data1 = res?.data?.reverse();
 
-      setData(data1);
+      if(seachloading){
+        const filtered = data1.filter(job =>job.postName.toLowerCase().includes(search.toLowerCase()));
+         setData(filtered);
+      }else{
+         setData(data1);
+      }
+
+     
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
       setLoading(false);
     }
   };
+
+
+
+  const handleSeach = ()=>{
+        setSearchLoading(true)
+       
+  }
+
+  const ClearSeach = ()=>{
+     setSearchLoading(false)
+     setSearch("")
+
+  }
+
+  // console.log("---loading---",seachloading)
+
+  const handleChange= (value)=>{
+          setSearch(value)
+
+          // console.log("----seach----",value)
+  }
+
+  // console.log("--search2--",search)
 
   const handleAdd = () => {
     setEditingCompBlog(null);
@@ -570,6 +608,16 @@ const Job = () => {
       <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
         Add Job
       </Button>
+
+      <br />
+           
+
+           <div className="search">
+               <Input type="text" value={search} onChange={(e)=>{handleChange(e.target.value)}} placeholder="ENTER POST NAME"/>
+               <Button onClick={handleSeach}> Search</Button>
+                <Button onClick={ClearSeach}> Clear Filter</Button>
+           </div>
+
       {
         auth1?.user?.role === 'superAdmin' ? (<><Table
           columns={columns}

@@ -58,6 +58,11 @@ const Blogs = () => {
     const [selectedCategory, setSelectedCategory] = useState(null); // store in a variable
     const [selectedSubCategory, setSelectedSubCategory] = useState(null);
 
+      const[search,setSearch] = useState("")
+      const[seachloading,setSearchLoading] = useState(false);
+
+
+
     const handleCategoryChange = (value) => {
         setSelectedCategory(value); // save selected category ID to variable
         console.log("Selected Category ID:", value);
@@ -90,13 +95,18 @@ const Blogs = () => {
     // console.log(auth?.user._id);
 
     useEffect(() => {
-        fetchData();
+       
         fetchData1()
         fetchData3()
         fetchData4()
 
 
     }, []);
+
+
+    useEffect(()=>{
+          fetchData();
+      },[seachloading])
 
 
     useEffect(() => {
@@ -174,14 +184,45 @@ const Blogs = () => {
         try {
             const res = await axios.get(baseurl + "/api/blog/getAllBlog");
 
-            console.log("----data-----", res.data);
-            setData(res.data);
+            // console.log("----data-----", res.data);
+
+            const data1 = res?.data;
+            // setData(res.data);
+
+
+        if(seachloading){
+        const filtered = data1.filter(job =>job.title.toLowerCase().includes(search.toLowerCase()));
+         setData(filtered);
+        }else{
+         setData(data1);
+        }
             setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
             setLoading(false);
         }
     };
+
+
+     const handleSeach = ()=>{
+        setSearchLoading(true)
+       
+  }
+
+  const ClearSeach = ()=>{
+     setSearchLoading(false)
+     setSearch("")
+
+  }
+
+  // console.log("---loading---",seachloading)
+
+  const handleChange= (value)=>{
+          setSearch(value)
+
+          // console.log("----seach----",value)
+  }
+
 
     const handleAdd = () => {
         setEditingCompBlog(null);
@@ -234,6 +275,22 @@ const Blogs = () => {
              if (response) {
                 message.success("Status updated succesfully");
                 fetchData();
+
+
+                  if (response) {
+                    const postData = {
+                        blogsToDelete: [record]
+                    }
+
+                    const response1 = await axios.patch(
+                        `${baseurl}/api/auth/deleteSpecificuserBLog/${auth1?.user?._id}`,
+                        postData
+                    );
+
+                    // console.log(response1.data)
+                }
+
+
             }
         } catch (error) {
             console.log(error)
@@ -317,7 +374,7 @@ const Blogs = () => {
             category: values.category,
             subCategory: values.subcategories,
             tag: values.tags,
-            author: auth?.user?._id,
+            author: auth1?.user?._id,
             image: image1,
             content: editorContent,
             faqs:values.faqs,
@@ -342,6 +399,20 @@ const Blogs = () => {
                 setPhoto("");
                 fetchData();
                 setEditorContent("")
+
+
+                if (response?.data?._id) {
+                    const postData = {
+                        blog: [response?.data?._id]
+                    }
+
+                    const response1 = await axios.patch(
+                        `${baseurl}/api/auth/updateUser/${auth1?.user?._id}`,
+                        postData
+                    );
+
+                    // console.log(response1.data)
+                }
             }
         } catch (error) {
             console.log(error);
@@ -357,7 +428,7 @@ const Blogs = () => {
             category: values.category,
             subCategory: values.subcategories,
             tag: values.tags,
-            author: auth?.user?._id,
+            author: auth1?.user?._id,
             content: editorContent,
             faqs:values.faqs,
             alt:values.alt,
@@ -413,6 +484,13 @@ const Blogs = () => {
         {
             title: "Subcategories",
             dataIndex: ['subCategory', 'name'],
+            key: "subcategories",
+        },
+
+
+        {
+            title: "Author",
+            dataIndex: ['author', 'name'],
             key: "subcategories",
         },
 
@@ -524,6 +602,15 @@ const Blogs = () => {
             <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
                 Add Blog
             </Button>
+
+                    <div className="search">
+                           <Input type="text" value={search} onChange={(e)=>{handleChange(e.target.value)}} placeholder="Enter Keyword of  BLog Title"/>
+                           <Button onClick={handleSeach}> Search</Button>
+                            <Button onClick={ClearSeach}> Clear Filter</Button>
+                       </div>
+            
+            
+
             {
                 auth1?.user?.role === 'superAdmin' ? (<><Table
                     columns={columns}

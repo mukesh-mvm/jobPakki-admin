@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import {
   Table,
   Button,
@@ -10,7 +10,8 @@ import {
   Upload,
   Switch,
   DatePicker,
-  Popconfirm
+  Popconfirm,
+ 
 } from "antd";
 import { baseurl } from "../helper/Helper";
 import axios from "axios";
@@ -18,6 +19,19 @@ import Password from "antd/es/input/Password";
 // import { baseurl } from "../helper/Helper";
 import { useAuth } from "../context/auth";
 const { Option } = Select;
+import JoditEditor from "jodit-react";
+import { UploadOutlined } from "@ant-design/icons";
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
+import {
+  BellOutlined,
+  TranslationOutlined,
+  TruckOutlined,
+  CloseCircleOutlined,
+  PlusOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 
 
 const Users = () => {
@@ -27,9 +41,33 @@ const Users = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [form] = Form.useForm();
   const [auth, setAuth] = useAuth();
+
+    const [image1, setImage] = useState();
+  const [photo, setPhoto] = useState("");
+  const [cross, setCross] = useState(true);
+  const [record1, setRecord] = useState();
+  const [imageTrue, setImageTrue] = useState(false);
+  const editor = useRef(null);
+  const [editorContent, setEditorContent] = useState("");
   const auth1 = JSON.parse(localStorage.getItem('auth'));
 
   // console.log(auth?.user._id);
+
+
+
+    const handleRowClick = (record) => {
+    // console.log("Clicked row data:", record);
+    setRecord(record);
+    setImage(record?.image)
+    setCross(true);
+
+    // Access the clicked row's data here
+    // You can now use 'record' to get the details of the clicked row
+  };
+
+  const handleCross = () => {
+    setCross(false);
+  };
 
   useEffect(() => {
     fetchData();
@@ -56,12 +94,23 @@ const Users = () => {
 
   const handleEdit = (record) => {
     setEditingUser(record);
-    console.log(record.email);
+  
+     setImageTrue(true);
+    setEditorContent(record?.shortBio)
     form.setFieldsValue({
-      name: record.name,
-      username: record.email,
-      phone: record.phone,
-      specialization: record.specialization,
+      name: record?.name,
+      email: record?.email,
+      phone: record?.phone,
+      specialization: record?.specialization,
+      role:record?.role,
+       socialMedia: {
+        facebook: record?.socialMedia?.facebook || '',
+        linkedin: record?.socialMedia?.linkedin || '',
+        twitter: record?.socialMedia?.twitter || '',
+        profile: record?.socialMedia?.profile || '',
+      },
+      tag: record?.tag,
+      slug: record?.slug,
       // dob:record.dateOfBirth,
     });
     setIsModalOpen(true);
@@ -96,6 +145,40 @@ const Users = () => {
     }
 }
 
+
+const uploadImage = async (file) => {
+        console.log(file);
+        const formData = new FormData();
+        formData.append("image", file.file);
+        // console.log(file.file.name);
+    
+        try {
+          const response = await axios.post(
+            `${baseurl}/api/subcatagory/uploadImage`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+    
+          if (response) {
+            message.success("Image uploaded successfully!");
+            setImage(response.data.imageUrl);
+             toast.success("image uploaded successfully", { position: "bottom-right" });
+          }
+    
+          return response.data.imageUrl; // Assuming the API returns the image URL in the 'url' field
+        } catch (error) {
+          message.error("Error uploading image. Please try again later.");
+          console.error("Image upload error:", error);
+          return null;
+        }
+      };
+
+
+
   const handlePost = async (values) => {
 
 
@@ -109,6 +192,8 @@ const year = date.getUTCFullYear();
 // Format as DD/MM/YYYY
 const formatted = `${day}/${month}/${year}`;
 
+// const b = String(formatted)
+
     const postData = {
       name: values.name,
       email: values.email,
@@ -117,6 +202,17 @@ const formatted = `${day}/${month}/${year}`;
       specialization: values.specialization,
       phone: values.phone,
       role: values.role,
+
+       socialMedia: {
+        facebook: values?.socialMedia?.facebook || '',
+        linkedin: values?.socialMedia?.linkedin || '',
+        twitter: values?.socialMedia?.twitter || '',
+        profile: values?.socialMedia?.profile || '',
+      },
+      shortBio: editorContent,
+      tag: values?.tag,
+      slug: values?.slug,
+      image: image1,
 
     };
 
@@ -133,6 +229,8 @@ const formatted = `${day}/${month}/${year}`;
         setIsModalOpen(false);
         message.success("User created successfully!");
         fetchData();
+        setPhoto("");
+        setEditorContent("")
       }
     } catch (error) {
       console.log(error);
@@ -142,15 +240,25 @@ const formatted = `${day}/${month}/${year}`;
   const handlePut = async (values) => {
     const postData = {
       name: values.name,
-      email: values.username,
-      password: values.password,
+      email: values.email,
       specialization: values.specialization,
+      role: values?.role,
+       socialMedia: {
+        facebook: values?.socialMedia?.facebook || '',
+        linkedin: values?.socialMedia?.linkedin || '',
+        twitter: values?.socialMedia?.twitter || '',
+        profile: values?.socialMedia?.profile || '',
+      },
+      shortBio: editorContent,
+      tag: values?.tag,
+      slug: values?.slug,
+      image: imageTrue ? image1 : values.logo,
 
     };
 
     try {
-      const response = await axios.put(
-        `${baseurl}/api/admin/update/${editingUser?._id}`,
+      const response = await axios.patch(
+        `${baseurl}/api/auth/updateUser/${editingUser?._id}`,
         postData
       );
       console.log(response.data);
@@ -160,6 +268,8 @@ const formatted = `${day}/${month}/${year}`;
         fetchData();
         message.success("User update successfully!");
         form.resetFields();
+        setPhoto("");
+        setEditorContent("")
       }
     } catch (error) {
       console.log(error);
@@ -212,15 +322,15 @@ const formatted = `${day}/${month}/${year}`;
       ),
     },
 
-    // {
-    //   title: "Actions",
-    //   key: "actions",
-    //   render: (_, record) => (
-    //     <>
-    //       <Button onClick={() => handleEdit(record)}>Update</Button>
-    //     </>
-    //   ),
-    // },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <>
+          <Button onClick={() => handleEdit(record)}>Update</Button>
+        </>
+      ),
+    },
 
 
     {
@@ -253,6 +363,12 @@ const formatted = `${day}/${month}/${year}`;
         columns={columns}
         dataSource={data}
         loading={loading}
+        rowKey={(record) => record._id}
+        onRow={(record) => ({
+          onClick: () => {
+            handleRowClick(record); // Trigger the click handler
+          },
+        })}
       // rowKey="_id"
       />
 
@@ -281,13 +397,25 @@ const formatted = `${day}/${month}/${year}`;
 
 
 
-          <Form.Item
+          {/* <Form.Item
             name="password"
             label="Password"
             rules={[{ required: true, message: "Please enter your password!" }]}
           >
             <Input.Password placeholder="Password" />
-          </Form.Item>
+          </Form.Item> */}
+
+
+             {
+            !editingUser ? (<Form.Item
+              name="password"
+              label="Password"
+              rules={[{ required: true, message: "Please Enter Password!" }]}
+            >
+              <Input.Password placeholder="Password" />
+            </Form.Item>
+            ) : ("")
+          }
 
 
           <Form.Item
@@ -314,13 +442,19 @@ const formatted = `${day}/${month}/${year}`;
 
 
 
-            <Form.Item
+            
+
+
+              {
+            !editingUser ? (<Form.Item
               name="dateOfBirth"
               label="Date of Birth"
               rules={[{ required: true, message: "Please select your date of birth!" }]}
             >
               <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
             </Form.Item>
+            ) : ("")
+          }
 
 
             <Form.Item
@@ -336,12 +470,227 @@ const formatted = `${day}/${month}/${year}`;
           </Form.Item>
 
 
+          
+          <Form.Item
+            name="slug"
+            label="Slug"
+            rules={[{ required: true, message: "Please Enter slug !" }]}
+          >
+            <Input placeholder="Enter slug like " />
+          </Form.Item>
+
+
+          <Form.Item
+            name="tag"
+            label="Tag"
+            rules={[{ required: true, message: "Please Enter tag !" }]}
+          >
+            <Input placeholder="Enter tag like Finance and Travel " />
+          </Form.Item>
+
+
+          
+            <Form.Item
+              label="Facebook"
+              name={['socialMedia', 'facebook']}
+              rules={[{ type: 'url', message: 'Enter a valid URL' }]}
+            >
+              <Input placeholder="https://facebook.com/yourprofile" />
+            </Form.Item>
+
+            <Form.Item
+              label="LinkedIn"
+              name={['socialMedia', 'linkedin']}
+              rules={[{ type: 'url', message: 'Enter a valid URL' }]}
+            >
+              <Input placeholder="https://linkedin.com/in/yourprofile" />
+            </Form.Item>
+
+            <Form.Item
+              label="Twitter"
+              name={['socialMedia', 'twitter']}
+              rules={[{ type: 'url', message: 'Enter a valid URL' }]}
+            >
+              <Input placeholder="https://twitter.com/yourprofile" />
+            </Form.Item>
+
+            <Form.Item
+              label="Personal Website"
+              name={['socialMedia', 'profile']}
+              rules={[{ type: 'url', message: 'Enter a valid URL' }]}
+            >
+              <Input placeholder="https://yourwebsite.com" />
+            </Form.Item>
+
+
+
+          <Form.Item label="Short Bio" required>
+              <JoditEditor
+                ref={editor}
+                value={editorContent}
+                onBlur={(newContent) => setEditorContent(newContent)}
+                tabIndex={1}
+                placeholder="Write your content here..."
+                config={{
+                  cleanHTML: {
+                    removeEmptyTags: false,
+                    fillEmptyParagraph: false,
+                    removeEmptyBlocks: false,
+                  },
+                  uploader: {
+                    url: `${baseurl}/api/amenities/uploadImage`, // Your image upload API endpoint
+                    // This function handles the response
+                    format: "json", // Specify the response format
+                    isSuccess: function (resp) {
+                      return !resp.error;
+                    },
+                    getMsg: function (resp) {
+                      return resp.msg.join !== undefined
+                        ? resp.msg.join(" ")
+                        : resp.msg;
+                    },
+                    process: function (resp) {
+                      return {
+                        files: resp.files || [],
+                        path: resp.files.url,
+                        baseurl: resp.files.url,
+                        error: resp.error || "error",
+                        msg: resp.msg || "iuplfn",
+                      };
+                    },
+                    defaultHandlerSuccess: function (data, resp) {
+                      const files = data.files || [];
+                      // console.log({ files });
+                      if (files) {
+                        this.selection.insertImage(files.url, null, 250);
+                      }
+                    },
+                  },
+                  // enter: "DIV",
+                  defaultMode: "div",
+                  removeButtons: ["font"],
+                }}
+              />
+
+
+
+            </Form.Item>
+
+
+
+          {editingUser ? (
+              <>
+                {cross ? (
+                  <>
+                    <CloseCircleOutlined
+                      style={{ width: "30px" }}
+                      onClick={handleCross}
+                    />
+                    {
+                      record1?.image?.includes("res") ? (
+                        <img
+                          src={record1.image}
+                          alt=""
+                          style={{ width: "100px", height: "100px" }}
+                        />
+                      ) : (
+                        <img
+                          src={`${baseurl}${record1.image}`}
+                          alt=""
+                          style={{ width: "100px", height: "100px" }}
+                        />
+                      )
+                    }
+                  </>
+                ) : (
+                  <>
+                    <Form.Item
+                      label="Photo"
+                      name="photo"
+                      onChange={(e) => setPhoto(e.target.files[0])}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Please upload the driver's photo!",
+                        },
+                      ]}
+                    >
+                      <Upload
+                        listType="picture"
+                        beforeUpload={() => false}
+                        onChange={uploadImage}
+                        showUploadList={false}
+                        customRequest={({ file, onSuccess }) => {
+                          setTimeout(() => {
+                            onSuccess("ok");
+                          }, 0);
+                        }}
+                      >
+                        <Button icon={<UploadOutlined />}>Upload Photo</Button>
+                      </Upload>
+                    </Form.Item>
+                    {photo && (
+                      <div>
+                        <img
+                          src={URL.createObjectURL(photo)}
+                          alt="Uploaded"
+                          height="100px"
+                          width="100px"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                <Form.Item
+                  label="Photo"
+                  name="photo"
+                  onChange={(e) => setPhoto(e.target.files[0])}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please upload the driver's photo!",
+                    },
+                  ]}
+                >
+                  <Upload
+                    listType="picture"
+                    beforeUpload={() => false}
+                    onChange={uploadImage}
+                    showUploadList={false}
+                    customRequest={({ file, onSuccess }) => {
+                      setTimeout(() => {
+                        onSuccess("ok");
+                      }, 0);
+                    }}
+                  >
+                    <Button icon={<UploadOutlined />}>Upload Photo</Button>
+                  </Upload>
+                </Form.Item>
+                {photo && (
+                  <div>
+                    <img
+                      src={URL.createObjectURL(photo)}
+                      alt="Uploaded"
+                      height="100px"
+                      width="100px"
+                    />
+                  </div>
+                )}
+              </>
+            )}
+
+
             <Button type="primary" htmlType="submit">
               {editingUser ? "Update" : "Submit"}
             </Button>
           </Form.Item>
         </Form>
       </Modal>
+
+       <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
