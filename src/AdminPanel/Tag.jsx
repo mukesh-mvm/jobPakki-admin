@@ -20,7 +20,7 @@ import { useAuth } from "../context/auth";
 const { Option } = Select;
 
 
-const BestJob = () => {
+const Tag = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,23 +29,29 @@ const BestJob = () => {
     const [auth, setAuth] = useAuth();
     const [categories, setCategoris] = useState([])
     const auth1 = JSON.parse(localStorage.getItem('auth'));
+
+    const[search,setSearch] = useState("")
+      const[seachloading,setSearchLoading] = useState(false);
     // console.log(auth?.user._id);
 
     useEffect(() => {
-        fetchData();
+        // fetchData();
         fetchData1()
     }, []);
+
+
+    useEffect(() => {
+        fetchData();
+    }, [seachloading]);
 
 
 
 
     const fetchData1 = async () => {
         try {
-            const res = await axios.get(baseurl + "/api/job/getAllJob");
-            // console.log("----data data-----", res.data);
-
-            const data1 = res?.data?.reverse()
-            setCategoris(data1);
+            const res = await axios.get(baseurl + "/category");
+            // console.log("----data-----", res.data);
+            setCategoris(res.data);
             setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -55,13 +61,16 @@ const BestJob = () => {
 
     const fetchData = async () => {
         try {
-            const res = await axios.get(baseurl + "/api/bestJob/getAllBestJob");
+            const res = await axios.get(baseurl + "/api/tag/getAllTag");
 
-            // console.log("----data-----", res.data);
+        if(seachloading){
+        const filtered = res?.data.filter(job =>job.name.toLowerCase().includes(search.toLowerCase()));
+         setData(filtered);
+        }else{
+         setData(res?.data);
+        }
 
-            
-            setData(res.data);
-            setLoading(false);
+         setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
             setLoading(false);
@@ -76,9 +85,9 @@ const BestJob = () => {
 
     const handleEdit = (record) => {
         setEditingSubCategory(record);
+        // console.log(record.email);
         form.setFieldsValue({
-            title: record.title,
-            jobs: record.jobs.map(c => c._id)
+            name: record.name,
 
             // dob:record.dateOfBirth,
         });
@@ -88,8 +97,9 @@ const BestJob = () => {
     const handleStatusToggle = async (record) => {
         try {
             const response = await axios.patch(
-                `${baseurl}/api/bestJob/toggled/${record?._id}`
+                `${baseurl}/api/tag/toggled/${record?._id}`
             );
+            // console.log(response);
 
             if (response) {
                 message.success("Status updated succesfully");
@@ -101,9 +111,29 @@ const BestJob = () => {
     };
 
 
+       const handleSeach = ()=>{
+        setSearchLoading(true)
+       
+  }
+
+  const ClearSeach = ()=>{
+     setSearchLoading(false)
+     setSearch("")
+
+  }
+
+  // console.log("---loading---",seachloading)
+
+  const handleChange= (value)=>{
+          setSearch(value)
+
+          // console.log("----seach----",value)
+  }
+
+
     const handleDelete = async (record) => {
         try {
-            const response = await axios.delete(`${baseurl}/api/bestJob/deleteBestJob/${record}`)
+            const response = await axios.delete(`${baseurl}/api/tag/delete/${record}`)
             if (response) {
                 message.success("Status updated succesfully");
                 fetchData();
@@ -115,17 +145,16 @@ const BestJob = () => {
 
     const handlePost = async (values) => {
         const postData = {
-            jobs: values.jobs,
-            title: values.title,
+            name: values.name,
 
         };
 
         try {
             const response = await axios.post(
-                baseurl + "/api/bestJob/createBestJob",
+                baseurl + "/api/tag/create",
                 postData
             );
-            console.log(response.data);
+            // console.log(response.data);
 
             if (response.data) {
                 setIsModalOpen(false);
@@ -139,17 +168,16 @@ const BestJob = () => {
 
     const handlePut = async (values) => {
         const postData = {
-            jobs: values.jobs,
-            title: values.title,
+            name: values.name,
 
         };
 
         try {
             const response = await axios.put(
-                `${baseurl}/api/bestJob/getOneBestJob/${editingSubCategory?._id}`,
+                `${baseurl}/api/tag/update/${editingSubCategory?._id}`,
                 postData
             );
-            console.log(response.data);
+            // console.log(response.data);
 
             if (response.data) {
                 setIsModalOpen(false);
@@ -169,28 +197,14 @@ const BestJob = () => {
         }
     };
 
-
     const columns = [
         {
-            title: "Title",
-            dataIndex: "title",
-            key: "title",
+            title: "Name",
+            dataIndex: "name",
+            key: "name",
         },
 
-        // {
-        //     title: "CompBlog Titles",
-        //     key: "compBlogTitles",
-        //     render: (_, record) => {
-        //       if (!Array.isArray(record.compBlog)) return "No Blogs";
-        //       return (
-        //         <ul style={{ paddingLeft: 20, margin: 0 }}>
-        //           {record.compBlog.map((blog) => (
-        //             <li key={blog._id}>{blog.title}</li>
-        //           ))}
-        //         </ul>
-        //       );
-        //     },
-        //   },
+      
 
 
 
@@ -244,29 +258,13 @@ const BestJob = () => {
 
 
     const columns1 = [
-        
-        
-        
         {
-            title: "Title",
-            dataIndex: "title",
-            key: "title",
-          },
+            title: "Name",
+            dataIndex: "name",
+            key: "name",
+        },
 
-        //   {
-        //     title: "CompBlog Titles",
-        //     key: "compBlogTitles",
-        //     render: (_, record) => {
-        //       if (!Array.isArray(record.compBlog)) return "No Blogs";
-        //       return (
-        //         <ul style={{ paddingLeft: 20, margin: 0 }}>
-        //           {record.compBlog.map((blog) => (
-        //             <li key={blog._id}>{blog.title}</li>
-        //           ))}
-        //         </ul>
-        //       );
-        //     },
-        //   },
+        
 
 
 
@@ -300,8 +298,14 @@ const BestJob = () => {
     return (
         <div>
             <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
-                Add Best Job
+                Add Tag
             </Button>
+
+            <div className="search">
+                           <Input type="text" value={search} onChange={(e)=>{handleChange(e.target.value)}} placeholder="Enter SubCategory Name"/>
+                           <Button onClick={handleSeach}> Search</Button>
+                            <Button onClick={ClearSeach}> Clear Filter</Button>
+                       </div>
 
 
 
@@ -324,40 +328,19 @@ const BestJob = () => {
             }
 
             <Modal
-                title={editingSubCategory ? "Edit Best Job" : "Add Best Job"}
+                title={editingSubCategory ? "Edit Tag" : "Add Tag"}
                 open={isModalOpen}
                 onCancel={() => setIsModalOpen(false)}
                 footer={null}
             >
                 <Form form={form} layout="vertical" onFinish={handleSubmit}>
                     <Form.Item
-                        name="title"
-                        label="title"
+                        name="name"
+                        label="Name"
                         rules={[{ required: true, message: "Please input the name!" }]}
                     >
                         <Input placeholder="Enter Name" />
                     </Form.Item>
-
-
-                    <Form.Item
-                        label="Jobs"
-                        name="jobs"
-                        rules={[{ required: true, message: 'Please select the Comp blogs' }]}
-                    >
-                        <Select
-                            mode="multiple"
-                            placeholder="Select Blogs"
-
-                        >
-                            {categories?.map((cat) => (
-                                <Option key={cat._id} value={cat._id}>
-                                    {cat?.postName}
-                                </Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-
-
 
 
 
@@ -372,4 +355,4 @@ const BestJob = () => {
     );
 };
 
-export default BestJob;
+export default Tag;

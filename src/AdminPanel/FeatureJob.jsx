@@ -88,7 +88,7 @@ const FeatureJob = () => {
     const handleStatusToggle = async (record) => {
         try {
             const response = await axios.patch(
-                `${baseurl}/api/tops-shorts/toggled/${record?._id}`
+                `${baseurl}/api/featueJob/toggled/${record?._id}`
             );
 
             if (response) {

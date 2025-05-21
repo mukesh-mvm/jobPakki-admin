@@ -238,15 +238,15 @@ const Blogs = () => {
         setEditorContent(record.content)
 
         form.setFieldsValue({
-            title: record.title,
-            mtitle: record.mtitle,
-            mdesc: record.mdesc,
-            category: record.category._id,
-            subcategories: record.subCategory._id,
-            tags: record.tag._id,
-            faqs: record.faqs || [],
-            alt: record.alt,
-            slug: record.slug
+            title: record?.title,
+            mtitle: record?.mtitle,
+            mdesc: record?.mdesc,
+            category: record?.category._id,
+            subcategories: record?.subCategory?._id,
+            tags: record?.tag?._id,
+            faqs: record?.faqs || [],
+            alt: record?.alt,
+            slug: record?.slug
             // dob:record.dateOfBirth,
         });
         setIsModalOpen(true);

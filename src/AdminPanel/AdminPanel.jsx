@@ -30,6 +30,8 @@ import Job from "./Job";
 import BestJob from "./BestJob";
 import FeatureJob from "./FeatureJob";
 import RecentJob from "./RecentJob";
+import Tag from "./Tag";
+import MasterCards from "./MasterCards";
 
 import { Profile } from "./Profile";
 // import logo from "../../public/logo.png";
@@ -69,6 +71,8 @@ const AdminPanel = () => {
 
         case "job":
         return <Job />;
+        case "tag":
+        return <Tag />;
 
         case "bestjob":
         return <BestJob />;
@@ -92,6 +96,9 @@ const AdminPanel = () => {
       case "blog-post":
         return <BlogPosting setSelectedTab={setSelectedTab} />;
 
+
+         case "master-card":
+        return <MasterCards setSelectedTab={setSelectedTab} />;
       // BlogList
     }
   };
@@ -104,9 +111,15 @@ const AdminPanel = () => {
     { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
     { key: "job", icon: <TeamOutlined  />, label: "Job" },
-    { key: "bestjob", icon: <TeamOutlined  />, label: "Best Job" },
-    { key: "feature-job", icon: <TeamOutlined  />, label: "Feature Job" },
-    { key: "recent-job", icon: <TeamOutlined  />, label: "Recent Job" },
+    { key: "tag", icon: <TeamOutlined  />, label: "Tag" },
+    // { key: "bestjob", icon: <TeamOutlined  />, label: "Best Job" },
+    // { key: "feature-job", icon: <TeamOutlined  />, label: "Feature Job" },
+    // { key: "recent-job", icon: <TeamOutlined  />, label: "Recent Job" },
+     {
+      key: "master-card",
+      icon: <TeamOutlined />,
+      label: "Merchantising",
+    },
     // { key: "blog", icon: <CarOutlined />, label: "Blog" },
     // { key: "testinomial", icon: <CalendarOutlined />, label: "Testinomial" },
   ];
@@ -117,9 +130,15 @@ const AdminPanel = () => {
     { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
     { key: "job", icon: <TeamOutlined  />, label: "Job" },
-    { key: "bestjob", icon: <TeamOutlined  />, label: "Best Job" },
-    { key: "feature-job", icon: <TeamOutlined  />, label: "Feature Job" },
-    { key: "recent-job", icon: <TeamOutlined  />, label: "Recent Job" },
+     { key: "tag", icon: <TeamOutlined  />, label: "Tag" },
+    // { key: "bestjob", icon: <TeamOutlined  />, label: "Best Job" },
+    // { key: "feature-job", icon: <TeamOutlined  />, label: "Feature Job" },
+    // { key: "recent-job", icon: <TeamOutlined  />, label: "Recent Job" },
+     {
+      key: "master-card",
+      icon: <TeamOutlined />,
+      label: "Merchantising",
+    },
 
 
     // { key: "blog", icon: <CarOutlined />, label: "Blog" },
