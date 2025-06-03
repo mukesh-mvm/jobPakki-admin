@@ -246,6 +246,7 @@ const Blogs = () => {
             tags: record?.tag?._id,
             faqs: record?.faqs || [],
             alt: record?.alt,
+            blogContent: record?.blogContent,
             slug: record?.slug
             // dob:record.dateOfBirth,
         });
@@ -374,6 +375,7 @@ const Blogs = () => {
             category: values.category,
             subCategory: values.subcategories,
             tag: values.tags,
+            blogContent: values.blogContent,
             author: auth1?.user?._id,
             image: image1,
             content: editorContent,
@@ -432,6 +434,7 @@ const Blogs = () => {
             content: editorContent,
             faqs: values.faqs,
             alt: values.alt,
+            blogContent: values.blogContent,
             slug: values.slug,
             image: imageTrue ? image1 : values.logo,
 
@@ -864,6 +867,16 @@ const Blogs = () => {
                                 removeButtons: ["font"],
                             }}
                         />
+                    </Form.Item>
+
+
+
+                     <Form.Item
+                        name="blogContent"
+                        label="Conclusion"
+                    // rules={[{ required: true, message: "Please input the conclusion!" }]}
+                    >
+                        <Input.TextArea placeholder="Enter blog conclusion" rows={4} />
                     </Form.Item>
 
 
