@@ -126,8 +126,8 @@ const AdminPanel = () => {
   const menuItems1 = [
     // { key: "home", icon: <TeamOutlined />, label: "Home" },
      { key: "profile", icon: <HomeOutlined />, label: "Profile" },
-    { key: "categories", icon: <HomeOutlined />, label: "Categories" },
-    { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
+    // { key: "categories", icon: <HomeOutlined />, label: "Categories" },
+    // { key: "sub-categories", icon: <TeamOutlined  />, label: "Sub-Categories" },
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
     { key: "job", icon: <TeamOutlined  />, label: "Job" },
      { key: "tag", icon: <TeamOutlined  />, label: "Tag" },
