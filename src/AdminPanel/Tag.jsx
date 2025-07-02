@@ -1,4 +1,17 @@
 import React, { useState, useEffect } from "react";
+
+
+
+
+
+
+
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState } from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
+// import { Editor } from "@tinymce/tinymce-react";
+// import { useRef } from "react";
 import {
     Table,
     Button,
@@ -33,6 +46,12 @@ const Tag = () => {
     const[search,setSearch] = useState("")
       const[seachloading,setSearchLoading] = useState(false);
     // console.log(auth?.user._id);
+
+
+    //  const editorRef = useRef(null);
+    //   const [content, setContent] = useState("");
+
+     const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
     useEffect(() => {
         // fetchData();
@@ -341,6 +360,89 @@ const Tag = () => {
                     >
                         <Input placeholder="Enter Name" />
                     </Form.Item>
+
+
+
+
+ {/* <Editor
+      apiKey="obw2bhjogwkhemtx2ph1q1auya9byet1i80ateu397sicqv6"
+      value={content}
+      onEditorChange={(newContent) => setContent(newContent)}
+      onInit={(evt, editor) => (editorRef.current = editor)}
+      init={{
+        height: 500,
+        menubar: true,
+
+        plugins: [
+          "advlist autolink lists link image charmap preview anchor",
+          "searchreplace visualblocks code fullscreen",
+          "insertdatetime media table code help wordcount",
+        ],
+
+        toolbar:
+          "undo redo | formatselect | bold italic backcolor | " +
+          "alignleft aligncenter alignright alignjustify | " +
+          "bullist numlist outdent indent | link image media table | help",
+
+        // ✅ Enable image & media uploads
+        automatic_uploads: true,
+        file_picker_types: "image media",
+
+        // ✅ Open link in new tab
+        link_target_list: [
+          { title: "None", value: "" },
+          { title: "Open in new tab", value: "_blank" },
+        ],
+        target_list: true,
+
+        // ✅ File picker to upload image/video
+        file_picker_callback: function (callback, value, meta) {
+          const input = document.createElement("input");
+          input.setAttribute("type", "file");
+
+          if (meta.filetype === "image") {
+            input.setAttribute("accept", "image/*");
+          } else if (meta.filetype === "media") {
+            input.setAttribute("accept", "video/*");
+          }
+
+          input.onchange = async function () {
+            const file = this.files[0];
+            const formData = new FormData();
+            formData.append("image", file);
+
+            const response = await fetch("https://api.top5shots.com/api/uploadImage", {
+              method: "POST",
+              body: formData,
+            });
+
+            const result = await response.json();
+            if (!response.ok || !result.imageUrl) {
+              alert("Upload failed");
+              return;
+            }
+
+            // Insert uploaded file's URL
+            callback(result.imageUrl, { title: file.name });
+          };
+
+          input.click();
+        },
+      }}
+    /> */}
+
+
+     <Editor
+        editorState={editorState}
+        onEditorStateChange={setEditorState}
+        wrapperClassName="demo-wrapper"
+        editorClassName="demo-editor"
+      />
+
+
+
+
+   
 
 
 

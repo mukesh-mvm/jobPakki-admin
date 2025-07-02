@@ -7,5 +7,7 @@ export default defineConfig({
   server: {
     port: 4000, // Change this to whatever port you want
   },
-
+  define: {
+    global: 'window', // ✅ This fixes "global is not defined"
+  },
 })

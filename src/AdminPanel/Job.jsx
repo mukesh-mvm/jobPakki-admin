@@ -137,7 +137,11 @@ const Job = () => {
     try {
       const res = await axios.get(`${baseurl}/api/subcatagory/getSubCategoryByCatId/${selectedCategory}`);
       // console.log("----data-----", res.data);
-      setSubCategoris(res.data);
+
+      const filterdata = res?.data?.filter((item)=>{
+          return item?.status ==='Active'
+      })
+      setSubCategoris(filterdata);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);

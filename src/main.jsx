@@ -5,6 +5,11 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import { AuthProvider } from "./context/auth.jsx";
 
+
+if (typeof global === "undefined") {
+  window.global = window;
+}
+
 createRoot(document.getElementById("root")).render(
   <AuthProvider>
     <BrowserRouter>
