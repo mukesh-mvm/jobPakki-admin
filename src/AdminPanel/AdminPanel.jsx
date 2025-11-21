@@ -34,6 +34,7 @@ import Tag from "./Tag";
 import MasterCards from "./MasterCards";
 
 import { Profile } from "./Profile";
+import PopupAdmin from "./PopupAdmin";
 // import logo from "../../public/logo.png";
 // properties-details
 
@@ -99,6 +100,9 @@ const AdminPanel = () => {
 
          case "master-card":
         return <MasterCards setSelectedTab={setSelectedTab} />;
+
+         case "popup":
+        return <PopupAdmin />;
       // BlogList
     }
   };
@@ -112,6 +116,8 @@ const AdminPanel = () => {
     { key: "blogs", icon: <TeamOutlined  />, label: "Blogs" },
     { key: "job", icon: <TeamOutlined  />, label: "Job" },
     { key: "tag", icon: <TeamOutlined  />, label: "Tag" },
+
+     { key: "popup", icon: <TeamOutlined  />, label: "Popup" },
     // { key: "bestjob", icon: <TeamOutlined  />, label: "Best Job" },
     // { key: "feature-job", icon: <TeamOutlined  />, label: "Feature Job" },
     // { key: "recent-job", icon: <TeamOutlined  />, label: "Recent Job" },
@@ -139,7 +145,7 @@ const AdminPanel = () => {
       icon: <TeamOutlined />,
       label: "Merchantising",
     },
-
+   { key: "popup", icon: <TeamOutlined  />, label: "Popup" },
 
     // { key: "blog", icon: <CarOutlined />, label: "Blog" },
     // { key: "testinomial", icon: <CalendarOutlined />, label: "Testinomial" },
