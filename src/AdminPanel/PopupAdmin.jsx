@@ -14,7 +14,7 @@ import {
 import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import axios from "axios";
 // import { baseurl } from "../helper/Helper";
-// sdfijlsd
+
 const { Dragger } = Upload;
 
 const PopupAdmin = () => {
